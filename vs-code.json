@@ -1,0 +1,12 @@
+{
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "args": [
+        "-NoExit",
+        "-Command",
+        "fastfetch -c 'C:/Users/Harsh Prajapati/.config/fastfetch/config.jsonc'"
+      ]
+    }
+  }
+}
