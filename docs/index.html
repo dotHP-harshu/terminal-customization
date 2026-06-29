@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal Customization — Windows PowerShell Prompt &amp; Startup</title>
+  <meta name="description"
+    content="A complete guide to customizing your Windows Terminal with ASCII startup art and styled PowerShell prompts. 10 prompt styles included.">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Ambient Glow -->
+  <div class="ambient-glow" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav__inner">
+      <div class="nav__brand">terminal-setup</div>
+      <ul class="nav__links">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#setup">Setup</a></li>
+        <li><a href="#prompts">Prompts</a></li>
+        <li><a href="#customize">Customize</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <a href="https://github.com/dotHP-harshu/terminal-customization" target="_blank" rel="noopener"
+          class="theme-toggle" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+          </svg>
+        </a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+          <svg class="icon-moon" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="container container--narrow">
+      <span class="label reveal">Open-source / PowerShell 7+</span>
+      <h1 class="reveal">Make your terminal<br>actually worth looking at.</h1>
+      <p class="hero__sub reveal">Custom ASCII startup art. 10 handcrafted prompt styles. Smart path colors, git status,
+        language detection. All native PowerShell, no external prompt frameworks.</p>
+      <div class="hero__actions reveal">
+        <a href="https://github.com/dotHP-harshu/terminal-customization" target="_blank" class="btn btn--primary">GitHub</a>
+        <a href="#prompts" class="btn btn--ghost">View Prompt Styles</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Overview -->
+  <section id="overview">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="label">What this does</span>
+        <h2>Two layers of customization</h2>
+        <p>This project replaces the default PowerShell experience with a terminal that shows system information on
+          startup and presents a styled, informative prompt every time you press Enter.</p>
+      </div>
+
+      <div class="bento bento--asymmetric stagger">
+        <div class="reveal">
+          <span class="label">Layer 1</span>
+          <h3>ASCII Startup Banner</h3>
+          <p>When you open a terminal, Fastfetch displays your custom ASCII art. The logo uses Catppuccin Mocha colors and renders with JetBrains Mono Nerd Font.</p>
+          <div style="margin-top: 1.5rem;">
+            <div class="os-window">
+              <div class="os-window__bar">
+                <span class="os-window__dot"></span>
+                <span class="os-window__dot"></span>
+                <span class="os-window__dot"></span>
+              </div>
+              <div class="os-window__body">
+                <div class="terminal-preview" style="color: var(--text-secondary);">
+                  <pre>
+
+██████╗    █████╗  ████████╗  ██╗  ██╗  ██████╗
+██╔══██╗  ██╔══██╗ ╚══██╔══╝  ██║  ██║  ██╔══██╗
+██║  ██║  ██║  ██║    ██║     ███████║  ██████╔╝
+██║  ██║  ██║  ██║    ██║     ██╔══██║  ██╔═══╝
+██████╔╝  ╚█████╔╝    ██║     ██║  ██║  ██║
+╚═════╝    ╚════╝     ╚═╝     ╚═╝  ╚═╝  ╚═╝
+
+                  </pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal">
+          <span class="label">Layer 2</span>
+          <h3>Custom Prompt</h3>
+          <p>Every command line starts with a styled prompt showing your username, smart-truncated path, git branch with
+            status, and optional language version or execution time. 10 styles included.</p>
+          <div style="margin-top: 1.5rem;">
+            <div class="os-window">
+              <div class="os-window__bar">
+                <span class="os-window__dot"></span>
+                <span class="os-window__dot"></span>
+                <span class="os-window__dot"></span>
+              </div>
+              <div class="os-window__body">
+                <div class="terminal-preview">
+                  <span class="c-muted">╭─</span><span class="c-nerd"> 󰣇 </span><span
+                    class="c-cyan">harsh@DESKTOP</span>
+                  <span class="c-muted">│</span>
+                  <span class="c-muted">├─</span><span class="c-nerd"> 󰉋 </span><span
+                    class="c-path">~\Projects\SchoolFlow</span>
+                  <span class="c-muted">├─</span><span class="c-nerd"> </span><span class="c-yellow">main</span> <span
+                    class="c-green">✓</span>
+                  <span class="c-muted">├─</span><span class="c-nerd"> 󰍛 12ms</span>
+                  <span class="c-muted">│</span>
+                  <span class="c-muted">╰─</span><span class="c-green">❯ </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prerequisites -->
+  <section id="prerequisites">
+    <div class="container container--narrow">
+      <div class="section-header reveal">
+        <span class="label">Before you start</span>
+        <h2>Prerequisites</h2>
+        <p>Three things you need installed before proceeding. The font is mandatory, the rest are recommended.</p>
+      </div>
+
+      <div class="bento bento--3 stagger">
+        <div class="reveal">
+          <span class="label">Required</span>
+          <h3>JetBrains Mono Nerd Font</h3>
+          <p>Without this, icons render as empty boxes. Download from nerdfonts.com and install the .ttf files.</p>
+        </div>
+        <div class="reveal">
+          <span class="label">Recommended</span>
+          <h3>Fastfetch</h3>
+          <p>Displays system info with your ASCII logo on startup. Install via winget.</p>
+          <div class="code-block" style="margin-top: 1rem;">
+            <pre>winget install fastfetch</pre>
+          </div>
+        </div>
+        <div class="reveal">
+          <span class="label">Required</span>
+          <h3>PowerShell 7+</h3>
+          <p>The prompt scripts use features only available in PowerShell 7 or later. Check with
+            <code>$PSVersionTable</code>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Setup Guide -->
+  <section id="setup">
+    <div class="container container--narrow">
+      <div class="section-header reveal">
+        <span class="label">Step by step</span>
+        <h2>Setup guide</h2>
+        <p>Follow these four steps in order. Each one builds on the previous.</p>
+      </div>
+
+      <div class="steps">
+
+        <!-- Step 1: Font -->
+        <div class="step reveal">
+          <div class="step__number"></div>
+          <div class="step__body">
+            <h3>Install the Nerd Font</h3>
+            <p>Go to <a href="https://www.nerdfonts.com/font-downloads"
+                style="text-decoration: underline; text-underline-offset: 3px;">nerdfonts.com/font-downloads</a>, search
+              for JetBrainsMono, download the zip, extract it, and install every .ttf file. Then set your terminal to
+              use "JetBrainsMono Nerd Font" in its settings.</p>
+          </div>
+        </div>
+
+        <!-- Step 2: Fastfetch -->
+        <div class="step reveal">
+          <div class="step__number"></div>
+          <div class="step__body">
+            <h3>Install Fastfetch and configure it</h3>
+            <p>Fastfetch reads your ASCII art and system info on terminal startup. Install it, then create the config
+              directory and copy the two files from this repo.</p>
+            <div class="code-block">
+              <div class="code-block__header">
+                <span class="code-block__filename">PowerShell</span>
+                <button class="code-block__copy" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre><code>winget install fastfetch</code></pre>
+            </div>
+            <div class="code-block">
+              <div class="code-block__header">
+                <span class="code-block__filename">PowerShell</span>
+              </div>
+              <pre><code>mkdir "$HOME\.config\fastfetch"</code></pre>
+            </div>
+            <div class="code-block">
+              <div class="code-block__header">
+                <span class="code-block__filename">PowerShell</span>
+                <button class="code-block__copy" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre><code>
+# Copy from this repo:
+#   fastfetch/ascii.txt      -> your ASCII logo
+#   fastfetch/config.jsonc   -> display config</code></pre>
+            </div>
+          </div>
+          <p style="margin-top: 1rem;"></p>
+          <p style="margin-top: 1rem;">You can
+            find
+            <code><a href="https://github.com/dotHP-harshu/terminal-customization/" target="_blank"><u>./fastfetch/</u></a></code>
+            in github.<br />
+            The config file points to <code>~/.config/fastfetch/ascii.txt</code> and
+            applies Catppuccin Mocha colors. Edit <code>ascii.txt</code> with your own art if desired.</p>
+        </div>
+      </div>
+
+      <!-- Step 3: Profile -->
+      <div class="step reveal">
+        <div class="step__number"></div>
+        <div class="step__body">
+          <h3>Set up your PowerShell profile</h3>
+          <p>Your PowerShell profile runs every time you open a terminal. This is where the startup banner and custom
+            prompt live.</p>
+          <div class="code-block">
+            <div class="code-block__header">
+              <span class="code-block__filename">PowerShell</span>
+              <button class="code-block__copy" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code># Find your profile path
+$PROFILE
+
+# Create it if it doesn't exist
+if (!(Test-Path -Path $PROFILE)) {
+    New-Item -ItemType File -Path $PROFILE -Force
+}
+
+# Open in Notepad
+notepad $PROFILE</code></pre>
+          </div>
+          <p style="margin-top: 1rem;">Delete everything in that file, then paste the contents of your chosen prompt
+            file from the <code>standalone/</code> folder. Save and close.</p>
+        </div>
+      </div>
+
+      <!-- Step 4: Restart -->
+      <div class="step reveal">
+        <div class="step__number"></div>
+        <div class="step__body">
+          <h3>Restart your terminal</h3>
+          <p>Close and reopen Windows Terminal. You should see the Fastfetch banner followed by your new styled
+            prompt. To test the clear shortcut, type <kbd>cls</kbd> or <kbd>clear</kbd> and press Enter.</p>
+        </div>
+      </div>
+
+    </div>
+    </div>
+  </section>
+
+  <!-- Prompt Gallery -->
+  <section id="prompts">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="label">10 styles</span>
+        <h2>Prompt gallery</h2>
+        <p>Click any prompt to view its full source code. Copy the entire file into your <code>$PROFILE</code> to use
+          it.</p>
+      </div>
+
+      <div class="prompt-grid stagger" id="prompt-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Customization -->
+  <section id="customize">
+    <div class="container container--narrow">
+      <div class="section-header reveal">
+        <span class="label">Make it yours</span>
+        <h2>Customization</h2>
+        <p>Every prompt file defines its color palette at the top. Here is what each variable controls and how to change
+          it.</p>
+      </div>
+
+      <div class="bento bento--2 stagger">
+        <div class="reveal">
+          <h3>Color Variables</h3>
+          <p>Each standalone file begins with a block of <code>$C_*</code> variables. These map to PowerShell's
+            <code>[ConsoleColor]</code> enum.
+          </p>
+          <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="width: 10px; height: 10px; background: #22C55E; border-radius: 2px;"></span>
+              <code>$C_SUCCESS</code>
+              <span style="font-size: 0.8rem; color: var(--text-secondary);">Prompt character, clean indicators</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="width: 10px; height: 10px; background: #3B82F6; border-radius: 2px;"></span>
+              <code>$C_DIR</code>
+              <span style="font-size: 0.8rem; color: var(--text-secondary);">Folder and directory icons</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="width: 10px; height: 10px; background: #D946EF; border-radius: 2px;"></span>
+              <code>$C_GIT</code>
+              <span style="font-size: 0.8rem; color: var(--text-secondary);">Git branch icon</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="width: 10px; height: 10px; background: #EAB308; border-radius: 2px;"></span>
+              <code>$C_BRANCH</code>
+              <span style="font-size: 0.8rem; color: var(--text-secondary);">Git branch name</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="width: 10px; height: 10px; background: #0EA5E9; border-radius: 2px;"></span>
+              <code>$C_USER</code>
+              <span style="font-size: 0.8rem; color: var(--text-secondary);">Username</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="width: 10px; height: 10px; background: #EF4444; border-radius: 2px;"></span>
+              <code>$C_DIRTY</code>
+              <span style="font-size: 0.8rem; color: var(--text-secondary);">Dirty git indicator (*)</span>
+            </div>
+          </div>
+          <p style="margin-top: 1.25rem;">Available colors: <code>White</code>, <code>Black</code>,
+            <code>DarkGray</code>, <code>Gray</code>, <code>Red</code>, <code>DarkRed</code>, <code>Green</code>,
+            <code>DarkGreen</code>, <code>Blue</code>, <code>DarkBlue</code>, <code>Cyan</code>, <code>DarkCyan</code>,
+            <code>Magenta</code>, <code>DarkMagenta</code>, <code>Yellow</code>, <code>DarkYellow</code>.
+          </p>
+        </div>
+
+        <div class="reveal">
+          <h3>Path Color Cycle</h3>
+          <p>The <code>$C_PATH_CYCLE</code> array controls the colors for each folder level in the path. Each segment
+            gets the next color in the list.</p>
+          <div class="code-block" style="margin-top: 1rem;">
+            <div class="code-block__header">
+              <span class="code-block__filename">Default cycle</span>
+            </div>
+            <pre><code>$C_PATH_CYCLE = @(
+    [ConsoleColor]::Blue,
+    [ConsoleColor]::Cyan,
+    [ConsoleColor]::Magenta,
+    [ConsoleColor]::Yellow
+)</code></pre>
+          </div>
+          <p style="margin-top: 1rem;">Add, remove, or reorder colors. The cycle repeats if the path has more segments
+            than colors.</p>
+
+          <h3 style="margin-top: 2rem;">Username and Hostname</h3>
+          <p>Most prompts read from environment variables automatically. To hardcode a different name, replace
+            <code>$env:USERNAME</code> with a string.
+          </p>
+          <div class="code-block" style="margin-top: 1rem;">
+            <div class="code-block__header">
+              <span class="code-block__filename">Custom name</span>
+            </div>
+            <pre><code># Default (reads from system)
+Write-Host $env:USERNAME ...
+
+# Custom name
+Write-Host "harsh" ...</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Color Palette Reference -->
+      <div style="margin-top: 3rem;" class="reveal">
+        <h3>Catppuccin Mocha Hex Values</h3>
+        <p style="margin-top: 0.5rem; margin-bottom: 1.5rem;">For Fastfetch ASCII art coloring in
+          <code>config.jsonc</code>.
+        </p>
+        <div class="swatch-grid">
+          <div class="swatch">
+            <div class="swatch__color" style="background: #F5E0DC;"></div>
+            <div class="swatch__label">#F5E0DC Rosewater</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__color" style="background: #F2CDCD;"></div>
+            <div class="swatch__label">#F2CDCD Flamingo</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__color" style="background: #F5C2E7;"></div>
+            <div class="swatch__label">#F5C2E7 Pink</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__color" style="background: #FAB387;"></div>
+            <div class="swatch__label">#FAB387 Peach</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__color" style="background: #F9E2AF;"></div>
+            <div class="swatch__label">#F9E2AF Yellow</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__color" style="background: #A6E3A1;"></div>
+            <div class="swatch__label">#A6E3A1 Green</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__color" style="background: #94E2D5;"></div>
+            <div class="swatch__label">#94E2D5 Teal</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__color" style="background: #89DCEB;"></div>
+            <div class="swatch__label">#89DCEB Sky</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__color" style="background: #74C7EC;"></div>
+            <div class="swatch__label">#74C7EC Sapphire</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__color" style="background: #89B4FA;"></div>
+            <div class="swatch__label">#89B4FA Blue</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__color" style="background: #B4BEFE;"></div>
+            <div class="swatch__label">#B4BEFE Lavender</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch__color" style="background: #CBA6F7;"></div>
+            <div class="swatch__label">#CBA6F7 Mauve</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works">
+    <div class="container container--narrow">
+      <div class="section-header reveal">
+        <span class="label">Under the hood</span>
+        <h2>How it works</h2>
+        <p>The startup flow is straightforward. Here is what happens from the moment you open a terminal.</p>
+      </div>
+
+      <div class="flow reveal">
+        <div class="flow__item">
+          <div class="flow__item-title">Terminal Opens</div>
+          <div class="flow__item-desc">Windows Terminal launches PowerShell 7</div>
+        </div>
+        <div class="flow__arrow">
+          <svg viewBox="0 0 16 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 2v16M4 14l4 4 4-4" />
+          </svg>
+        </div>
+        <div class="flow__item">
+          <div class="flow__item-title">$PROFILE Loads</div>
+          <div class="flow__item-desc">PowerShell reads your profile script from Documents\PowerShell\</div>
+        </div>
+        <div class="flow__arrow">
+          <svg viewBox="0 0 16 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 2v16M4 14l4 4 4-4" />
+          </svg>
+        </div>
+        <div class="flow__item">
+          <div class="flow__item-title">Clear-Host + Show-Fastfetch</div>
+          <div class="flow__item-desc">Screen clears, Fastfetch runs with your config and ASCII art</div>
+        </div>
+        <div class="flow__arrow">
+          <svg viewBox="0 0 16 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 2v16M4 14l4 4 4-4" />
+          </svg>
+        </div>
+        <div class="flow__item">
+          <div class="flow__item-title">prompt Function Renders</div>
+          <div class="flow__item-desc">Custom prompt draws username, path, git, and other info</div>
+        </div>
+        <div class="flow__arrow">
+          <svg viewBox="0 0 16 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 2v16M4 14l4 4 4-4" />
+          </svg>
+        </div>
+        <div class="flow__item">
+          <div class="flow__item-title">Ready for Input</div>
+          <div class="flow__item-desc">You type commands. On cls/clear, Show-Fastfetch re-runs.</div>
+        </div>
+      </div>
+
+      <!-- VS Code Integration -->
+      <div style="margin-top: 4rem;" class="reveal">
+        <h3>VS Code Integration</h3>
+        <p>To make VS Code's integrated terminal also show Fastfetch on startup, add a custom profile to your VS Code
+          <code>settings.json</code>.
+        </p>
+        <div class="code-block" style="margin-top: 1rem;">
+          <div class="code-block__header">
+            <span class="code-block__filename">settings.json</span>
+            <button class="code-block__copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>{
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "args": [
+        "-NoExit",
+        "-Command",
+        "fastfetch -c 'C:/Users/YourName/.config/fastfetch/config.jsonc'"
+      ]
+    }
+  }
+}</code></pre>
+        </div>
+        <p style="margin-top: 1rem;">Replace <code>C:/Users/YourName/</code> with your actual home path. Run
+          <code>$HOME</code> in PowerShell to find it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container container--narrow">
+      <div class="section-header reveal">
+        <span class="label">Troubleshooting</span>
+        <h2>Frequently asked questions</h2>
+      </div>
+
+      <div class="accordion reveal" id="faq-accordion">
+        <div class="accordion__item" data-open="false">
+          <button class="accordion__trigger" onclick="toggleAccordion(this)">
+            <span>Icons show as boxes or weird characters</span>
+            <span class="accordion__icon">+</span>
+          </button>
+          <div class="accordion__content">
+            <div class="accordion__content-inner">
+              <p>You have not installed the Nerd Font, or your terminal is not set to use it. Install JetBrains Mono
+                Nerd Font from nerdfonts.com, then go to your terminal settings and set the font to "JetBrainsMono Nerd
+                Font". Restart the terminal after changing.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion__item" data-open="false">
+          <button class="accordion__trigger" onclick="toggleAccordion(this)">
+            <span>Fastfetch does not show on startup</span>
+            <span class="accordion__icon">+</span>
+          </button>
+          <div class="accordion__content">
+            <div class="accordion__content-inner">
+              <p>Check if it is installed by running <code>fastfetch --version</code> in PowerShell. If not found,
+                install it with <code>winget install fastfetch</code>. Also verify that your profile includes the
+                <code>Show-Fastfetch</code> function and that it is called at the top of the profile script.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion__item" data-open="false">
+          <button class="accordion__trigger" onclick="toggleAccordion(this)">
+            <span>Prompt looks broken after editing</span>
+            <span class="accordion__icon">+</span>
+          </button>
+          <div class="accordion__content">
+            <div class="accordion__content-inner">
+              <p>Open <code>$PROFILE</code> in Notepad and check for syntax errors. PowerShell is strict about string
+                escaping and brackets. If you are stuck, delete everything and paste a fresh copy of your chosen
+                standalone file.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion__item" data-open="false">
+          <button class="accordion__trigger" onclick="toggleAccordion(this)">
+            <span>cls or clear does not redraw Fastfetch</span>
+            <span class="accordion__icon">+</span>
+          </button>
+          <div class="accordion__content">
+            <div class="accordion__content-inner">
+              <p>Make sure your profile includes the alias lines at the bottom:</p>
+              <div class="code-block" style="margin-top: 0.75rem;">
+                <pre><code>function c {
+    Clear-Host
+    Show-Fastfetch
+}
+
+Set-Alias cls c
+Set-Alias clear c</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion__item" data-open="false">
+          <button class="accordion__trigger" onclick="toggleAccordion(this)">
+            <span>Path colors look wrong</span>
+            <span class="accordion__icon">+</span>
+          </button>
+          <div class="accordion__content">
+            <div class="accordion__content-inner">
+              <p>The <code>$C_PATH_CYCLE</code> array might be empty or contain invalid color names. Make sure each
+                entry is a valid <code>[ConsoleColor]</code> value. The cycle repeats if your path has more segments
+                than the number of colors defined.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion__item" data-open="false">
+          <button class="accordion__trigger" onclick="toggleAccordion(this)">
+            <span>Can I use this with Windows Terminal only?</span>
+            <span class="accordion__icon">+</span>
+          </button>
+          <div class="accordion__content">
+            <div class="accordion__content-inner">
+              <p>The prompt scripts work in any PowerShell 7+ terminal. The Fastfetch startup banner works in any
+                terminal that supports it. Windows Terminal is recommended for the best experience with themes and
+                transparency, but ConEmu, Cmder, and VS Code's integrated terminal all work.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="padding: 3rem 0; border-top: 1px solid var(--border);">
+    <div class="container"
+      style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-tertiary);">
+        terminal-customization
+      </div>
+      <div style="font-size: 0.8rem; color: var(--text-tertiary);">
+        PowerShell 7+ / Windows
+      </div>
+    </div>
+  </footer>
+
+  <!-- Code Modal -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal__header">
+        <span class="modal__title" id="modal-title">Source Code</span>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button class="code-block__copy" id="modal-copy" onclick="copyModalCode()">Copy</button>
+          <button class="modal__close" onclick="closeModal()">&times;</button>
+        </div>
+      </div>
+      <div class="modal__body">
+        <pre><code id="modal-code"></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="prompts.js"></script>
+  <script src="./script.js">
+
+  </script>
+</body>
+
+</html>
