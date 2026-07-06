@@ -528,7 +528,6 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     gap: "8px",
     whiteSpace: "pre-line",
-    maxWidth: "100%",
   },
   messageRowUser: {
     alignSelf: "flex-end",
@@ -563,6 +562,7 @@ const styles: Record<string, React.CSSProperties> = {
     wordBreak: "break-word",
     display: "flex",
     flexDirection: "column",
+    maxWidth:"90%"
   },
   bubbleUser: {
     background: "var(--canvas)",
