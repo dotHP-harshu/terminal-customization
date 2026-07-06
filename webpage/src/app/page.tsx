@@ -8,6 +8,7 @@ import Overview from "@/components/Overview";
 import Prerequistites from "@/components/Prerequisites";
 import PromptGallery from "@/components/PromptGallery";
 import Setup from "@/components/Setup";
+import ChatWidget from "@/components/ChatWidget";
 import { useEffect } from "react";
 
 export default function Page() {
@@ -69,6 +70,7 @@ export default function Page() {
           </div>
         </div>
       </footer>
+      <ChatWidget />
     </>
   );
 }
