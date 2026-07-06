@@ -33,10 +33,13 @@ export async function POST(request: Request) {
     });
 
     if (!res.choices) {
-      return Response.json({ message: "Error on generating res from ai.", status:200 });
+      return Response.json({ message: "Error on generating res from ai." });
     }
 
-    return Response.json({ aiRes: res.choices[0].message.content });
+    return Response.json({
+      aiRes: res.choices[0].message.content,
+      status: 200,
+    });
   } catch (error) {
     if (error instanceof Error) {
       return Response.json({ message: error.message, status: 400 });

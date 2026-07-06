@@ -20,9 +20,14 @@ export default function ChatWidget() {
   ]);
   const bottomMsgRef = useRef<HTMLDivElement>(null);
   const [errorMsg, setErrorMsg] = useState("");
+  const abortControllerRef = useRef<AbortController>(null);
+
+  const stopGeneration = () => {
+    abortControllerRef.current?.abort();
+  };
 
   const sendMessage = async () => {
-    setErrorMsg("")
+    setErrorMsg("");
     if (userMessageInput.trim() === "" || isLoading) return;
 
     const updatedMessages: MESSAGE_INTERFACE[] = [
@@ -37,12 +42,16 @@ export default function ChatWidget() {
     setUserMessageInput("");
     setIsLoading(true);
 
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        signal: controller.signal,
         body: JSON.stringify({
           messages: updatedMessages,
         }),
@@ -58,10 +67,16 @@ export default function ChatWidget() {
         return setMessages((p) => [...p, { role: "ai", message: aiRes }]);
       }
 
+      console.log(data)
       setErrorMsg(data.message);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") {
+        console.log("Request aborted");
+      } else {
+        console.error(err);
+      }
     } finally {
+      abortControllerRef.current = null;
       setIsLoading(false);
     }
   };
@@ -226,16 +241,27 @@ export default function ChatWidget() {
                   style={styles.textarea}
                 />
 
-                <button
-                  disabled={isLoading}
-                  onClick={sendMessage}
-                  style={{
-                    ...styles.sendBtn,
-                    ...(isLoading ? { opacity: "0.5" } : {}),
-                  }}
-                >
-                  {!isLoading ? "↑" : "■"}
-                </button>
+                {isLoading ? (
+                  <button
+                    onClick={stopGeneration}
+                    style={{
+                      ...styles.sendBtn,
+                      ...{ opacity: "0.5" },
+                    }}
+                  >
+                    ■
+                  </button>
+                ) : (
+                  <button
+                    disabled={isLoading}
+                    onClick={sendMessage}
+                    style={{
+                      ...styles.sendBtn,
+                    }}
+                  >
+                    ↑
+                  </button>
+                )}
               </div>
             </div>
           </div>
