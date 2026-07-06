@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
+import ErrorBanner from "./ErrorBanner";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -17,9 +18,11 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState<MESSAGE_INTERFACE[]>([
     { role: "ai", message: "Hello \nHow can I help you today?" },
   ]);
-  const bottomMsgRef  = useRef<HTMLDivElement>(null)
+  const bottomMsgRef = useRef<HTMLDivElement>(null);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const sendMessage = async () => {
+    setErrorMsg("")
     if (userMessageInput.trim() === "" || isLoading) return;
 
     const updatedMessages: MESSAGE_INTERFACE[] = [
@@ -46,12 +49,16 @@ export default function ChatWidget() {
       });
 
       if (res.status !== 200) {
-        console.log(res.statusText);
+        return console.log(res.statusText);
       }
 
       const data = await res.json();
-      const aiRes = data.aiRes;
-      setMessages((p) => [...p, { role: "ai", message: aiRes }]);
+      if (data.status === 200) {
+        const aiRes = data.aiRes;
+        return setMessages((p) => [...p, { role: "ai", message: aiRes }]);
+      }
+
+      setErrorMsg(data.message);
     } catch (error) {
       console.log(error);
     } finally {
@@ -59,9 +66,9 @@ export default function ChatWidget() {
     }
   };
 
-  useEffect(()=>{
-    bottomMsgRef.current?.scrollIntoView({behavior:"smooth"})
-  },[isLoading])
+  useEffect(() => {
+    bottomMsgRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [isLoading]);
 
   return (
     <>
@@ -71,6 +78,7 @@ export default function ChatWidget() {
           ...(isOpen ? styles.widgetContainerOpen : {}),
         }}
       >
+        {errorMsg !== "" && <ErrorBanner message={errorMsg} />}
         {isOpen && (
           <div style={styles.panel}>
             {/* Header */}
@@ -119,34 +127,72 @@ export default function ChatWidget() {
                         rehypePlugins={[rehypeHighlight]}
                         components={{
                           h1: ({ children }) => (
-                            <h1 style={{fontWeight:"700" , marginBottom:"1rem", fontSize:"1.5rem"}} className="text-2xl font-bold mb-4">
+                            <h1
+                              style={{
+                                fontWeight: "700",
+                                marginBottom: "1rem",
+                                fontSize: "1.5rem",
+                              }}
+                              className="text-2xl font-bold mb-4"
+                            >
                               {children}
                             </h1>
                           ),
 
                           h2: ({ children }) => (
-                            <h2 style={{fontWeight:"600" , marginBottom:"0.5rem", fontSize:"1.25rem", marginTop:"1.25rem"}} className="text-xl font-semibold mt-6 mb-2">
+                            <h2
+                              style={{
+                                fontWeight: "600",
+                                marginBottom: "0.5rem",
+                                fontSize: "1.25rem",
+                                marginTop: "1.25rem",
+                              }}
+                              className="text-xl font-semibold mt-6 mb-2"
+                            >
                               {children}
                             </h2>
                           ),
 
                           p: ({ children }) => (
-                            <p style={{lineHeight:"1.75rem", marginBottom:"1.75"}} className="leading-7 mb-3">{children}</p>
+                            <p
+                              style={{
+                                lineHeight: "1.75rem",
+                                marginBottom: "1.75",
+                              }}
+                              className="leading-7 mb-3"
+                            >
+                              {children}
+                            </p>
                           ),
 
-                          ul:({children})=>(
-                            <ul style={{display:"flex", flexDirection:"column", padding:"1rem"}}>{children}</ul>
+                          ul: ({ children }) => (
+                            <ul
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                padding: "1rem",
+                              }}
+                            >
+                              {children}
+                            </ul>
                           ),
-                          ol:({children})=>(
-                            <ul style={{display:"flex", flexDirection:"column", padding:"1rem"}}>{children}</ul>
-                        )
-
+                          ol: ({ children }) => (
+                            <ul
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                padding: "1rem",
+                              }}
+                            >
+                              {children}
+                            </ul>
+                          ),
                         }}
                       >
                         {msg.message}
                       </Markdown>
                     </div>
-                    <div ref={bottomMsgRef}/>
+                    <div ref={bottomMsgRef} />
                   </div>
                 );
               })}
@@ -376,8 +422,8 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: "1.55",
     color: "var(--text-primary, #2f3437)",
     wordBreak: "break-word",
-    display:"flex",
-    flexDirection:"column"
+    display: "flex",
+    flexDirection: "column",
   },
   bubbleUser: {
     background: "var(--canvas)",
