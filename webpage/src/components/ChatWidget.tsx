@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
@@ -67,7 +67,7 @@ export default function ChatWidget() {
         return setMessages((p) => [...p, { role: "ai", message: aiRes }]);
       }
 
-      console.log(data)
+      console.log(data);
       setErrorMsg(data.message);
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") {
@@ -136,72 +136,95 @@ export default function ChatWidget() {
                     >
                       {isUser ? "You" : "AI"}
                     </div>
-                    <div style={{ ...styles.bubble, ...styles.bubbleUser }}>
+                    <div
+                      style={{
+                        ...styles.bubble,
+                        ...(isUser ? styles.bubbleUser : styles.bubbleBot),
+                      }}
+                    >
                       <Markdown
                         remarkPlugins={[remarkGfm]}
                         rehypePlugins={[rehypeHighlight]}
                         components={{
                           h1: ({ children }) => (
-                            <h1
-                              style={{
-                                fontWeight: "700",
-                                marginBottom: "1rem",
-                                fontSize: "1.5rem",
-                              }}
-                              className="text-2xl font-bold mb-4"
-                            >
-                              {children}
-                            </h1>
+                            <h1 style={markdownStyle.mdH1}>{children}</h1>
                           ),
 
                           h2: ({ children }) => (
-                            <h2
-                              style={{
-                                fontWeight: "600",
-                                marginBottom: "0.5rem",
-                                fontSize: "1.25rem",
-                                marginTop: "1.25rem",
-                              }}
-                              className="text-xl font-semibold mt-6 mb-2"
-                            >
-                              {children}
-                            </h2>
+                            <h2 style={markdownStyle.mdH2}>{children}</h2>
+                          ),
+
+                          h3: ({ children }) => (
+                            <h3 style={markdownStyle.mdH3}>{children}</h3>
                           ),
 
                           p: ({ children }) => (
-                            <p
-                              style={{
-                                lineHeight: "1.75rem",
-                                marginBottom: "1.75",
-                              }}
-                              className="leading-7 mb-3"
-                            >
-                              {children}
-                            </p>
+                            <p style={markdownStyle.mdP}>{children}</p>
                           ),
 
                           ul: ({ children }) => (
-                            <ul
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                padding: "1rem",
-                              }}
-                            >
-                              {children}
-                            </ul>
+                            <ul style={markdownStyle.mdUl}>{children}</ul>
                           ),
+
                           ol: ({ children }) => (
-                            <ul
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                padding: "1rem",
-                              }}
-                            >
-                              {children}
-                            </ul>
+                            <ol style={markdownStyle.mdOl}>{children}</ol>
                           ),
+
+                          li: ({ children }) => (
+                            <li style={markdownStyle.mdLi}>{children}</li>
+                          ),
+
+                          blockquote: ({ children }) => (
+                            <blockquote style={markdownStyle.mdQuote}>
+                              {children}
+                            </blockquote>
+                          ),
+
+                          hr: () => <hr style={markdownStyle.mdHr} />,
+
+                          table: ({ children }) => (
+                            <div style={markdownStyle.tableWrapper}>
+                              <table style={markdownStyle.mdTable}>
+                                {children}
+                              </table>
+                            </div>
+                          ),
+
+                          thead: ({ children }) => (
+                            <thead style={markdownStyle.mdThead}>
+                              {children}
+                            </thead>
+                          ),
+
+                          th: ({ children }) => (
+                            <th style={markdownStyle.mdTh}>{children}</th>
+                          ),
+
+                          td: ({ children }) => (
+                            <td style={markdownStyle.mdTd}>{children}</td>
+                          ),
+
+                          pre: ({ children }) => (
+                            <pre style={styles.codeBlock}>{children}</pre>
+                          ),
+
+                          code({ className, children, ...props }) {
+                            const isInline = !className;
+
+                            if (isInline) {
+                              return (
+                                <code style={styles.inlineCode}>
+                                  {children}
+                                </code>
+                              );
+                            }
+
+                            return (
+                              <code className={className} {...props}>
+                                {children}
+                              </code>
+                            );
+                          },
                         }}
                       >
                         {msg.message}
@@ -232,6 +255,7 @@ export default function ChatWidget() {
             <div style={styles.inputArea}>
               <div style={styles.inputRow}>
                 <textarea
+                autoFocus={true}
                   disabled={isLoading}
                   value={userMessageInput}
                   onChange={(e) => setUserMessageInput(e.target.value)}
@@ -285,6 +309,92 @@ export default function ChatWidget() {
     </>
   );
 }
+
+const markdownStyle: Record<string, React.CSSProperties> = {
+  mdH1: {
+    fontSize: "1.5rem",
+    fontWeight: 700,
+    margin: "0 0 16px",
+  },
+
+  mdH2: {
+    fontSize: "1.25rem",
+    fontWeight: 600,
+    margin: "20px 0 10px",
+  },
+
+  mdH3: {
+    fontSize: "1.05rem",
+    fontWeight: 600,
+    margin: "18px 0 8px",
+  },
+
+  mdP: {
+    margin: "0 0 12px",
+    lineHeight: 1.7,
+  },
+
+  mdUl: {
+    margin: "10px 0",
+    paddingLeft: "22px",
+  },
+
+  mdOl: {
+    margin: "10px 0",
+    paddingLeft: "22px",
+  },
+
+  mdLi: {
+    marginBottom: "6px",
+    lineHeight: 1.6,
+  },
+
+  mdQuote: {
+    borderLeft: "4px solid #1F6C9F",
+    background: "#f8fafc",
+    padding: "10px 14px",
+    margin: "14px 0",
+    borderRadius: "8px",
+    color: "#444",
+  },
+
+  mdHr: {
+    border: 0,
+    borderTop: "1px solid #ddd",
+    margin: "20px 0",
+  },
+
+  tableWrapper: {
+    overflowX: "auto",
+    margin: "14px 0",
+    border: "1px solid #e5e7eb",
+    borderRadius: "10px",
+    maxWidth: "100%",
+  },
+
+  mdTable: {
+    width: "100%",
+    borderCollapse: "collapse",
+    minWidth: "450px",
+  },
+
+  mdThead: {
+    background: "#f5f5f5",
+  },
+
+  mdTh: {
+    textAlign: "left",
+    padding: "10px 14px",
+    borderBottom: "1px solid #ddd",
+    fontWeight: 600,
+    whiteSpace: "nowrap",
+  },
+
+  mdTd: {
+    padding: "10px 14px",
+    borderBottom: "1px solid #eee",
+  },
+};
 
 const styles: Record<string, React.CSSProperties> = {
   fab: {
@@ -416,6 +526,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     gap: "8px",
     whiteSpace: "pre-line",
+    maxWidth: "100%",
   },
   messageRowUser: {
     alignSelf: "flex-end",

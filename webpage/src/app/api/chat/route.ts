@@ -1,4 +1,5 @@
 import { client } from "@/app/lib/client";
+import { getContext } from "@/app/lib/getcontext";
 import { MESSAGE_INTERFACE } from "@/components/ChatWidget";
 import { SYSTEM_PROMPT } from "@/data/systemPrompt";
 
@@ -12,10 +13,15 @@ export async function POST(request: Request) {
   if (!messages || !Array.isArray(messages))
     return Response.json({ message: "Messages not found", status: 400 });
 
+  const userMessage = messages.pop();
+
+  const context = await getContext(userMessage?.message);
+  console.log(context);
+
   const HISTORY: ChatCompletionMessageParam[] = [
     {
       role: "system",
-      content: SYSTEM_PROMPT,
+      content: `=== SYSTEM PROMPT ===\n${SYSTEM_PROMPT}`,
     },
     ...messages.map((msg: MESSAGE_INTERFACE) => {
       return {
@@ -26,10 +32,17 @@ export async function POST(request: Request) {
   ];
   try {
     // Generating the ai response
-
+    HISTORY.push({ role: "user", content: userMessage.message });
+    console.log(HISTORY);
     const res = await client.chat.completions.create({
       model: "gpt-4",
-      messages: HISTORY,
+      messages: [
+        {
+          role: "system",
+          content: `=== SYSTEM PROMPT ===\n${SYSTEM_PROMPT}\n=== CONTEXT ===\n${context}`,
+        },
+        ...HISTORY,
+      ],
     });
 
     if (!res.choices) {
