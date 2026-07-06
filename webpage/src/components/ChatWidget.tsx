@@ -205,7 +205,9 @@ export default function ChatWidget() {
                           ),
 
                           pre: ({ children }) => (
-                            <pre style={styles.codeBlock}>{children}</pre>
+                            <div style={{maxWidth:"100%", overflowX:"auto"}}>
+                              <pre style={styles.codeBlock}>{children}</pre>
+                            </div>
                           ),
 
                           code({ className, children, ...props }) {
