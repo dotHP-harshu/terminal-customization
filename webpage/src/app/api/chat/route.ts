@@ -16,7 +16,6 @@ export async function POST(request: Request) {
   const userMessage = messages.pop();
 
   const context = await getContext(userMessage?.message);
-  console.log(context);
 
   const HISTORY: ChatCompletionMessageParam[] = [
     {
@@ -33,7 +32,6 @@ export async function POST(request: Request) {
   try {
     // Generating the ai response
     HISTORY.push({ role: "user", content: userMessage.message });
-    console.log(HISTORY);
     const res = await client.chat.completions.create({
       model: "gpt-4",
       messages: [

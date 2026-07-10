@@ -1017,3 +1017,200 @@ code:not(pre code) {
     transform: translateY(-2px);
   }
 }
+
+
+
+/* ==========================================================
+   Mobile Optimizations
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+  /* Layout */
+  :root {
+    --section-py: 3.5rem;
+  }
+
+  .container {
+    padding-inline: 1rem;
+  }
+
+  section {
+    padding: var(--section-py) 0;
+  }
+
+  /* Hero */
+
+  .hero {
+    padding-top: 4rem;
+  }
+
+  .hero h1 {
+    line-height: 1.15;
+  }
+
+  .hero__sub {
+    margin-inline: 0;
+    max-width: 100%;
+    font-size: 1rem;
+  }
+
+  .hero__actions {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Typography */
+
+  p {
+    max-width: 100%;
+    font-size: 0.95rem;
+  }
+
+  h2 {
+    margin-bottom: .75rem;
+  }
+
+  /* Cards */
+
+  .card,
+  .prompt-card,
+  .os-window__body,
+  .modal__body,
+  .code-block pre {
+    padding: 1rem;
+  }
+
+  /* Prompt Preview */
+
+  .prompt-card__preview {
+    min-height: auto;
+    font-size: .72rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* Terminal */
+
+  .terminal-preview {
+    font-size: .65rem;
+    line-height: 1.45;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  /* Code */
+
+  .code-block pre,
+  .modal__body pre {
+    font-size: .72rem;
+  }
+
+  /* Buttons */
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Modal */
+
+  .modal-overlay {
+    padding: 1rem;
+  }
+
+  .modal {
+    max-height: 92vh;
+    border-radius: 10px;
+  }
+
+  /* Flow */
+
+  .flow__item {
+    padding: 1rem;
+  }
+
+  /* Steps */
+
+  .step {
+    padding: 1.5rem 0;
+  }
+
+  /* Swatches */
+
+  .swatch-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  /* Tables */
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Images */
+
+  img {
+    height: auto;
+  }
+
+}
+
+/* Small Phones */
+
+@media (max-width:480px){
+
+  html{
+      font-size:15px;
+  }
+
+  .container{
+      padding-inline:.85rem;
+  }
+
+  .hero{
+      padding-top:3rem;
+  }
+
+  .hero h1{
+      font-size:2rem;
+  }
+
+  .hero__sub{
+      font-size:.95rem;
+  }
+
+  .prompt-grid{
+      grid-template-columns:1fr;
+  }
+
+  .prompt-card__header{
+      padding:.9rem 1rem;
+  }
+
+  .prompt-card__desc{
+      padding:1rem;
+  }
+
+  .terminal-preview{
+      font-size:.58rem;
+  }
+
+  .code-block pre,
+  .modal__body pre{
+      font-size:.68rem;
+  }
+
+  .nav__inner{
+      height:3.2rem;
+  }
+
+}
